@@ -4,10 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let squares = Array.from(document.querySelectorAll('.grid div'));
     const scoreDisplay = document.querySelector('#score');
     const startBtn = document.querySelector('#start-button');
+    const restartBtn = document.querySelector('#restart-button');
     const width = 10;
     let nextRandom = 0;
     let timerId;
     let score = 0;
+    let gameFinished = false;
     const colors = [
       'orange',
       'red',
@@ -15,6 +17,30 @@ document.addEventListener('DOMContentLoaded', () => {
       'green',
       'blue'
     ];
+
+    restartBtn.addEventListener('click', () => {
+      undraw()
+      score = 0;
+      gameFinished = false;
+      for (let i = 0; i < 199; i++) {
+        squares[i].classList.remove('tetromino');
+        squares[i].classList.remove('taken');
+        squares[i].style.backgroundColor = '';
+      }
+
+    
+      currentPosition = 4;
+      currentRotation = 0;
+      clearInterval(timerId);
+      nextRandom = Math.floor(Math.random() * theTetrominoes.length);
+      random = nextRandom;
+      current = theTetrominoes[random][currentRotation];
+      currentPosition = 4;
+      scoreDisplay.innerHTML = score;
+      draw();
+      displayShape();
+      timerId = setInterval(moveDown, 1000);
+    })
 
     const lTetromino = [
         [1, width+1, width*2+1, 2],
@@ -78,18 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //functions to Key
     function control(e) {
-      if (e.keyCode === 37) {
-        moveLeft();
-      } else if (e.keyCode === 38) {
-        rotate();
-      } else if (e.keyCode === 39) {
-        moveRight();
-      } else if (e.keyCode === 40) {
-        moveDown();
+      if(e.keyCode === 37 && !gameFinished) {
+        moveLeft()
+      } else if (e.keyCode === 38 && !gameFinished) {
+        rotate()
+      } else if (e.keyCode === 39 && !gameFinished) {
+        moveRight()
+      } else if (e.keyCode === 40 && !gameFinished) {
+        moveDown()
       }
     }
 
-    document.addEventListener('keyup', control);
+    document.addEventListener('keydown', control);
 
     function moveDown() {
       undraw();
@@ -144,15 +170,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    function checkRotatedPosition(P){
+      P = P || currentPosition
+      if ((P+1) % width < 4) {    
+        if (isAtRight()){
+          currentPosition += 1 
+          checkRotatedPosition(P)
+          }
+      }
+      else if (P % width > 5) {
+        if (isAtLeft()){
+          currentPosition -= 1
+        checkRotatedPosition(P)
+        }
+      }
+    }
+
 
     //rotate tetromino
     function rotate() {
       undraw();
-      currentRotation++
-      if (currentRotation === theTretrominos[random].length) {
+      currentRotation ++
+      if (currentRotation === current.length) {
         currentRotation = 0;
       }
       current = theTetrominoes[random][currentRotation];
+      checkRotatedPosition()
       draw();
     }
 
@@ -189,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         draw();
         timerId = setInterval(moveDown, 1000);
-        nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+        
         displayShape();
       }
     })
@@ -218,7 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function gameOver() {
       if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
         scoreDisplay.innerHTML = 'Game Over!';
-        clearInterval(timeId)
+        gameFinished = true;
+        clearInterval(timerId)
       }
     }
 
