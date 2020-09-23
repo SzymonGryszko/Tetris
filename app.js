@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0;
     let gameFinished = false;
     const colors = [
-      'orange',
-      'red',
-      'purple',
-      'green',
-      'blue'
+      '#ef476f',
+      '#ffd166',
+      '#06d6a0',
+      '#118ab2',
+      '#073b4c'
     ];
 
     restartBtn.addEventListener('click', () => {
