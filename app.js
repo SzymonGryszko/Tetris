@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       undraw()
       score = 0;
       gameFinished = false;
-      for (let i = 0; i < 199; i++) {
+      for (let i = 0; i < 200; i++) {
         squares[i].classList.remove('tetromino');
         squares[i].classList.remove('taken');
         squares[i].style.backgroundColor = '';
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
       currentRotation = 0;
       clearInterval(timerId);
       nextRandom = Math.floor(Math.random() * theTetrominoes.length);
-      random = nextRandom;
       current = theTetrominoes[random][currentRotation];
       currentPosition = 4;
       scoreDisplay.innerHTML = score;
@@ -78,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
 
 
-    const theTetrominoes = [lTetromino, zTetromino, oTetromino, iTetromino];
+    const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino];
 
     let currentPosition = 4;
     let currentRotation = 0;
